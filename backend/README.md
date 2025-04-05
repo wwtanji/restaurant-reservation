@@ -31,19 +31,13 @@ Module for database-related logic and configuration.
 2. `python -m venv .venv`  
 3. Activate virtual environment:  
     - Mac/Linux: `source .venv/bin/activate`  
-    - Windows: `.\.venv\Scripts\activate.ps1`  
-4. Install required Python packages:  
-   `pip install -r requirements.txt`  
+    - Windows: `.venv\scripts\activate.ps1`  
+4. Install required Python packages: `pip install -r requirements.txt`  
 5. Add `DATABASE_URL` to environment variables (in `.env` file)  
-6. Start your preferred MySQL server (e.g., via XAMPP)  
-7. If MySQL does not start:
-   - Open **Task Manager**
-   - Find and end the `mysql` task
-   - Restart XAMPP  
-8. If Python process won’t stop or restart:
-   - Open **Task Manager**
-   - Find and end the `python` task
-   - Start your backend again manually  
+6. Start uvicorn server: `uvicorn main:API --reload --env-file .env`
+7. Don't forget XAMPP
+8. If you can't turn on SQL in XAMPP, open "Task manager" -> mysql -> end task -> start XAMPP
+9. you may also get a uvicorn so via "task manager" -> python -> end task -> start again 
 
 > Note: The server startup command is not yet included. You may add Uvicorn or another ASGI server later.
 
