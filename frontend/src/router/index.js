@@ -1,3 +1,4 @@
+import SignUp from '@/components/SignUp/SignUp.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
 const StartView = () => import('../views/StartView.vue');
@@ -8,6 +9,7 @@ const router = createRouter({
   routes: [
     { path: '/', name: 'home', component: StartView },
 
+    {path: '/signup', name: 'signup', component: SignUp},
     { path: '/:pathMatch(.*)*', redirect: '/' }
   ]
 });

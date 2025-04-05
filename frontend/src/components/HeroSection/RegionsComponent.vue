@@ -21,11 +21,11 @@
           v-for="region in regions"
           :key="region"
           @click="goToRegion(region)"
-          class="bg-white border border-gray-400 hover:border-blue-500 shadow-sm hover:shadow-md
+          class="group bg-white border border-gray-400 hover:border-blue-500 shadow-sm hover:shadow-md
             rounded-2xl h-20 sm:h-24 p-4 flex items-center justify-center cursor-pointer
             transform transition-all duration-300 hover:-translate-y-2"
         >
-          <span class="text-lg sm:text-xl font-semibold text-gray-900 hover:text-blue-600 transition-colors duration-300">
+          <span class="text-lg sm:text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
             {{ region }}
           </span>
         </div>
