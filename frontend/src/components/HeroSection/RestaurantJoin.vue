@@ -1,10 +1,9 @@
 <template>
   <div
-    class="relative h-[80vh] flex items-center justify-center bg-cover bg-center"
+    class="relative h-[80vh] flex items-center justify-center bg-cover bg-center z-0"
     :style="{ backgroundImage: `url(${backgroundImage})` }"
   >
-    <!-- Softer gray/white overlay for muted background -->
-    <div class="absolute inset-0 bg-gradient-to-b from-gray-200/60 to-gray-900/50 mix-blend-multiply"></div>
+    <div class="absolute inset-0 bg-black/60"></div>
 
     <div class="relative text-center text-white px-6 z-10 max-w-2xl">
       <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight drop-shadow-xl">
