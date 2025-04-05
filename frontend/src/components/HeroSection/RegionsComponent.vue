@@ -4,7 +4,7 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-4xl mx-auto mt-12">
 
         <div class="col-span-full">
-          <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight bg-gradient-to-r from-blue-700 to-blue-600 text-transparent bg-clip-text">
+          <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight bg-blue-600 text-transparent bg-clip-text">
             Choose Your Location
           </h1>
         </div>
@@ -73,10 +73,15 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Inter:wght@400;600;700&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
 html, body {
   font-family: 'Open Sans', sans-serif;
 }
 
+h1{
+  font-family: 'Rubik', sans-serif;
+}
 p, span {
   font-family: 'Inter', sans-serif;
 }
