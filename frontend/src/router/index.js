@@ -1,15 +1,16 @@
-import SignUp from '@/components/SignUp/SignUp.vue';
 import { createRouter, createWebHistory } from 'vue-router';
-
-const StartView = () => import('../views/StartView.vue');
+import StartView from '@/views/StartView.vue';
+import RegisterView from '@/views/auth/RegisterView.vue';
+import LoginView from '@/views/auth/LoginView.vue';
 
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: '/', name: 'home', component: StartView },
+    { path: '/signup', name: 'signup', component: RegisterView },
+    { path: '/login', name: 'login', component:  LoginView},
 
-    {path: '/signup', name: 'signup', component: SignUp},
     { path: '/:pathMatch(.*)*', redirect: '/' }
   ]
 });
