@@ -1,9 +1,16 @@
+# ORM
 sqlalchemy
 alembic
 pymysql
-PyJWT
-fastapi
-uvicorn
-python-dotenv
 pydantic
+pydantic[email]
+
+# server
+fastapi
+python-multipart
+uvicorn
+
+# utils
+PyJWT
 passlib[bcrypt]
+python-dotenv

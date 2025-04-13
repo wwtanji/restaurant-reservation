@@ -1,8 +1,12 @@
-from fastapi import FastAPI
+import fastapi as fa
+from router import ALL_CONTROLLERS
 
-app = FastAPI()
+API = fa.FastAPI(title="API", version="0.1.0", root_path="/api")
 
 
-@app.get("/")
-def read_root():
-    return {"message": "Hello, FastAPI"}
+@API.get("/")
+async def root():
+    return {"message": "API is working"}
+
+for router in ALL_CONTROLLERS:
+    API.include_router(router)

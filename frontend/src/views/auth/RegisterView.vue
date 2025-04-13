@@ -3,7 +3,7 @@
     <div class="w-full max-w-md bg-white border border-gray-200 rounded-2xl shadow-xl p-8 sm:p-10">
         <div class="text-center mb-8">
             <h2 class="text-4xl font-extrabold text-gray-800">Sign Up</h2>
-            <p class="mt-2 text-gray-500">Start now and get 5% off your first order.</p>
+            <p class="mt-4 text-gray-500">Start now and get 5% off your first order.</p>
         </div>
 
         <div class="flex gap-4 justify-center mb-6">

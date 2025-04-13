@@ -1,5 +1,5 @@
 <script setup>
-import NavbarComponent from '@/components/Navbar/NavbarComponent.vue';
+import NavbarComponent from '@/components/HeroSection/NavbarComponent.vue';
 import EightButtonsComponent from '@/components/HeroSection/RegionsComponent.vue';
 import JoinComponent from '@/components/HeroSection/JoinComponent.vue';
 import FooterComponent from '@/components/HeroSection/FooterComponent.vue';

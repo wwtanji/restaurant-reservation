@@ -22,7 +22,7 @@
 
         <router-link
           to="/signup"
-          class="text-md font-semibold bg-black text-white px-6 py-2 rounded-full hover:bg-gray-800 transition duration-200 shadow-lg"
+          class="text-md font-semibold bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition duration-200 shadow-lg"
         >
           Sign Up
         </router-link>
