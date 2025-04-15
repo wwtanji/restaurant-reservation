@@ -12,5 +12,6 @@ uvicorn
 
 # utils
 PyJWT
-passlib[bcrypt]
+passlib
 python-dotenv
+bcrypt==4.0.1
