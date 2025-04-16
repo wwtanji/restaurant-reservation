@@ -1,3 +1,14 @@
+<script lang="ts">
+export default {
+    name: 'SignInComponent',
+    methods: {
+        signin() {
+            // Handle login logic here
+        }
+    }
+}
+</script>
+
 <template>
 <div class="min-h-screen flex items-center justify-center bg-white p-6">
     <div class="w-full max-w-md bg-white border border-gray-200 rounded-2xl shadow-xl p-8 sm:p-10">
@@ -40,16 +51,7 @@
 </div>
 </template>
 
-<script>
-export default {
-    name: 'SignInComponent',
-    methods: {
-        signin() {
-            // Handle login logic here
-        }
-    }
-}
-</script>
+
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');

@@ -17,15 +17,13 @@
 </div>
 </template>
 
-<script>
-import mainPhoto from '@/assets/photos/women-cook.jpg';
-
+<script lang="ts">
 export default {
-    name: 'RestaurantJoinComponent',
-    data() {
-        return {
-            backgroundImage: mainPhoto,
-        };
-    },
+  name: 'RestaurantJoinComponent',
+  data() {
+    return {
+      backgroundImage: new URL('@/assets/photos/women-cook.jpg', import.meta.url).href
+    };
+  },
 };
 </script>

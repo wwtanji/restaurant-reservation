@@ -1,3 +1,9 @@
+<script lang="ts">
+export default {
+    name: 'FooterComponent',
+}
+</script>
+
 <template>
 <footer class="bg-gray-900 text-gray-400">
     <div class="max-w-7xl mx-auto px-6 py-16">
@@ -64,8 +70,4 @@
 </footer>
 </template>
 
-<script>
-export default {
-    name: 'FooterComponent',
-}
-</script>
+
