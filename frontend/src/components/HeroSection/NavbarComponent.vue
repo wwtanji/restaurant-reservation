@@ -2,7 +2,7 @@
 import { defineComponent, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
-import { useNotificationStore } from '@/stores/NotificationStore'
+import { useNotificationStore } from '@/stores/notificationStore'
 import NotificationToast from '@/components/Notification/NotificationToast.vue'
 
 export default defineComponent({

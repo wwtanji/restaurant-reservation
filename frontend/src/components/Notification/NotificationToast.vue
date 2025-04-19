@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { useNotificationStore } from '@/stores/NotificationStore'
+import { useNotificationStore } from '@/stores/notificationStore'
 import { computed } from 'vue'
 
 const notificationStore = useNotificationStore()
