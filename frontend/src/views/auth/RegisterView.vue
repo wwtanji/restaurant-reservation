@@ -1,9 +1,14 @@
 <script lang="ts">
 import { defineComponent, reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
 
 export default defineComponent({
   name: 'SignUpComponent',
   setup() {
+    const authStore = useAuthStore()
+    const router = useRouter()
+
     const form = reactive({
       first_name: '',
       last_name: '',
@@ -12,9 +17,14 @@ export default defineComponent({
       role: 0,
     })
 
-    const signup = () => {
-      // future api call
-      console.log('Sign up form submitted', form)
+    const signup = async () => {
+      try {
+        await authStore.register(form)
+        console.log('Registration successful')
+        router.push('/')
+      } catch (error) {
+        console.error('Registration failed:', error)
+      }
     }
 
     return {
@@ -30,7 +40,6 @@ export default defineComponent({
     <div class="w-full max-w-md bg-white border border-gray-200 rounded-2xl shadow-xl p-8 sm:p-10">
       <div class="text-center mb-8">
         <h2 class="text-4xl font-extrabold text-gray-800">Sign Up</h2>
-        <p class="mt-2 text-gray-500">Start now and get 5% off your first order.</p>
       </div>
 
       <form @submit.prevent="signup" class="space-y-4">
@@ -73,30 +82,14 @@ export default defineComponent({
         </button>
       </form>
 
-      <div class="flex items-center text-sm text-gray-400 my-6">
-        <hr class="flex-grow border-gray-300" />
-        <span class="mx-3">OR</span>
-        <hr class="flex-grow border-gray-300" />
-      </div>
-
-      <div class="flex gap-4 justify-center mb-6">
-        <button class="flex items-center justify-center gap-2 border border-gray-300 px-4 py-2 rounded-lg shadow-sm hover:shadow-md transition-all w-1/2">
-          <img src="https://img.icons8.com/color/24/000000/google-logo.png" alt="Google" />
-          <span class="text-sm font-medium text-gray-700">Google</span>
-        </button>
-        <button class="flex items-center justify-center gap-2 border border-gray-300 px-4 py-2 rounded-lg shadow-sm hover:shadow-md transition-all w-1/2">
-          <img src="https://img.icons8.com/color/24/000000/discord-logo.png" alt="Discord" />
-          <span class="text-sm font-medium text-gray-700">Discord</span>
-        </button>
-      </div>
-
-      <p class="text-center text-sm text-gray-500">
+      <p class="text-center text-sm text-gray-500 mt-10">
         Already have an account?
         <router-link to="/login" class="text-blue-600 font-semibold hover:underline">Log In</router-link>
       </p>
     </div>
   </div>
 </template>
+
 
 
 <style scoped>

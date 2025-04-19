@@ -24,11 +24,9 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="authentication/login")
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
+ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 
 class UserModel(BaseModel):
@@ -60,17 +58,22 @@ class LoginModel(BaseModel):
                 status_code=422, detail="Password must be at least 8 characters long"
             )
         return value
-    
+
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return bcrypt_context.verify(plain_password, hashed_password)
+
 
 def get_password_hash(password: str) -> str:
     return bcrypt_context.hash(password)
 
+
 @AUTH_ROUTER.post("/register")
 def register(user: UserModel, db: Session = Depends(get_db)):
     try:
-        existing_user = db.query(User).filter(User.user_email == user.user_email).first()
+        existing_user = (
+            db.query(User).filter(User.user_email == user.user_email).first()
+        )
         if existing_user:
             logger.warning(f"User with email {user.user_email} already exists.")
             raise HTTPException(status_code=400, detail="Email already registered")
@@ -82,28 +85,37 @@ def register(user: UserModel, db: Session = Depends(get_db)):
             user_email=user.user_email,
             user_password=hashed_password,
             role=user.role,
-            registered_at=datetime.now()
-        )   
+            registered_at=datetime.now(),
+        )
         db.add(new_user)
         db.commit()
         logger.info(f"User {user.user_email} registered successfully.")
-        
-        token = create_access_token(data={"sub": new_user.user_email})
+
+        token = create_access_token(data={"sub": new_user.user_email}, expires_delta=ACCESS_TOKEN_EXPIRE_MINUTES)
+        logger.info(f"Access token created for user {user.user_email}.")
         return {"access_token": token, "token_type": "bearer"}
     except Exception as e:
         logger.error(f"Error registering user: {e}")
         raise HTTPException(status_code=400, detail="Error registering user") from e
 
+
 @AUTH_ROUTER.post("/login")
 def login(user: LoginModel, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.user_email == user.user_email).first()
+
     if not db_user:
-        logger.warning(f"User with email {user.user_email} not found.")
+        logger.warning(f"Login failed: user with email '{user.user_email}' not found.")
         raise HTTPException(status_code=400, detail="Invalid email or password")
-    
+
+    if not verify_password(user.user_password, db_user.user_password):
+        logger.warning(f"Login failed: invalid password for user '{user.user_email}'.")
+        raise HTTPException(status_code=400, detail="Invalid email or password")
+
     token = create_access_token(data={"sub": db_user.user_email})
-    logger.info(f"User {user.user_email} logged in successfully.")
+    logger.info(f"User '{user.user_email}' logged in successfully.")
+
     return {"access_token": token, "token_type": "bearer"}
+
 
 @AUTH_ROUTER.get("/me")
 def get_me(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
@@ -111,7 +123,9 @@ def get_me(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     user_email = payload.get("sub")
     user = db.query(User).filter(User.user_email == user_email).first()
     if not user:
-        raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+        raise HTTPException(
+            status_code=401, detail="Invalid authentication credentials"
+        )
     return {
         "id": user.id,
         "first_name": user.first_name,

@@ -1,54 +1,75 @@
 <script lang="ts">
-export default {
-    name: 'SignInComponent',
-    methods: {
-        signin() {
-            // Handle login logic here
-        }
+import { defineComponent, reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
+
+export default defineComponent({
+  name: 'SignInComponent',
+  setup() {
+    const authStore = useAuthStore()
+    const router = useRouter()
+
+    const form = reactive({
+      user_email: '',
+      user_password: ''
+    })
+
+    const signin = async () => {
+      try {
+        await authStore.login(form)
+        console.log('Login successful')
+        router.push('/')
+      } catch (error) {
+        console.error('Login failed:', error)
+      }
     }
-}
+
+    return {
+      form,
+      signin,
+    }
+  }
+})
 </script>
 
 <template>
-<div class="min-h-screen flex items-center justify-center bg-white p-6">
+  <div class="min-h-screen flex items-center justify-center bg-white p-6">
     <div class="w-full max-w-md bg-white border border-gray-200 rounded-2xl shadow-xl p-8 sm:p-10">
-        <div class="text-center mb-8">
-            <h2 class="text-4xl font-extrabold text-gray-800">Sign In</h2>
-            <p class="mt-2 text-gray-500">Welcome back! Please log in to your account.</p>
-        </div>
+      <div class="text-center mb-8">
+        <h2 class="text-4xl font-extrabold text-gray-800">Sign In</h2>
+        <p class="mt-2 text-gray-500">Welcome back! Please log in to your account.</p>
+      </div>
 
-        <div class="flex gap-4 justify-center mb-6">
-            <button class="flex items-center justify-center gap-2 border border-gray-300 px-4 py-2 rounded-lg shadow-sm hover:shadow-md transition-all w-1/2">
-                <img src="https://img.icons8.com/color/24/000000/google-logo.png" alt="Google" />
-                <span class="text-sm font-medium text-gray-700">Google</span>
-            </button>
-            <button class="flex items-center justify-center gap-2 border border-gray-300 px-4 py-2 rounded-lg shadow-sm hover:shadow-md transition-all w-1/2">
-                <img src="https://img.icons8.com/color/24/000000/discord-logo.png" alt="Discord" />
-                <span class="text-sm font-medium text-gray-700">Discord</span>
-            </button>
-        </div>
+      <form @submit.prevent="signin" class="space-y-4">
+        <input
+          v-model="form.user_email"
+          type="email"
+          placeholder="Email"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+          required
+        />
+        <input
+          v-model="form.user_password"
+          type="password"
+          placeholder="Password"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+          required
+        />
 
-        <div class="flex items-center text-sm text-gray-400 mb-6">
-            <hr class="flex-grow border-gray-300" />
-            <span class="mx-3">OR</span>
-            <hr class="flex-grow border-gray-300" />
-        </div>
+        <button
+          type="submit"
+          class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold py-3 rounded-xl transition-all shadow-md"
+        >
+          Log In
+        </button>
+      </form>
 
-        <form @submit.prevent="signin" class="space-y-4">
-            <input type="email" placeholder="Email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" />
-            <input type="password" placeholder="Password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" />
-
-            <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold py-3 rounded-xl transition-all shadow-md">
-                Log In
-            </button>
-        </form>
-
-        <p class="text-center text-sm text-gray-500 mt-6">
-            Don't have an account?
-            <router-link to="/signup" class="text-blue-600 font-semibold hover:underline">Sign Up</router-link>
-        </p>
+      <p class="text-center text-sm text-gray-500 mt-6">
+        Don't have an account?
+        <router-link to="/signup" class="text-blue-600 font-semibold hover:underline">Sign Up</router-link>
+      </p>
     </div>
-</div>
+  </div>
 </template>
 
 

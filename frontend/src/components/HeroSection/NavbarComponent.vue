@@ -1,46 +1,98 @@
+<script lang="ts">
+import { defineComponent, computed, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
+import { useNotificationStore } from '@/stores/NotificationStore'
+import NotificationToast from '@/components/Notification/NotificationToast.vue'
+
+export default defineComponent({
+  name: 'NavbarComponent',
+  components: { NotificationToast },
+  setup() {
+    const authStore = useAuthStore()
+    const notificationStore = useNotificationStore()
+    const router = useRouter()
+
+    const avatarUrl = computed(() =>
+      `https://api.dicebear.com/9.x/bottts/svg?seed=${authStore.user?.first_name || 'user'}`
+    )
+
+    const logout = () => {
+      authStore.logout()
+      notificationStore.show('You have successfully logged out', 'error')
+      router.push('/')
+    }
+
+    watch(
+      () => authStore.user,
+      (newVal, oldVal) => {
+        if (newVal && !oldVal) {
+          notificationStore.show(`Welcome, ${newVal.first_name}!`, 'success')
+        }
+      },
+      { immediate: true }
+    )
+
+    return {
+      authStore,
+      avatarUrl,
+      logout,
+      notificationStore
+    }
+  }
+})
+</script>
+
 <template>
-  <nav class="bg-white shadow-md border-b-2 border-gray-300">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+  <nav class="bg-white shadow-sm border-b border-gray-200 relative z-50">
+    <NotificationToast />
+
+    <div class="flex items-center justify-between px-6 py-4 w-full">
       <div class="flex items-center gap-2">
-        <h1 class="text-3xl font-extrabold text-black">Reservelt</h1>
-      </div>
-
-      <div class="hidden md:flex gap-10 items-center text-black font-semibold">
-        <a href="#" class="hover:text-blue-700 transition duration-200">Discover</a>
-        <a href="#" class="hover:text-blue-700 transition duration-200">Events</a>
-        <a href="#" class="hover:text-blue-700 transition duration-200">Pricing</a>
-        <a href="#" class="hover:text-blue-700 transition duration-200">Contact</a>
-      </div>
-
-      <div class="hidden md:flex items-center gap-6">
-        <router-link
-          to="/login"
-          class="text-md font-semibold text-black hover:text-gray-600 transition duration-200"
-        >
-          Login
-        </router-link>
-
-        <router-link
-          to="/signup"
-          class="text-md font-semibold bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition duration-200 shadow-lg"
-        >
-          Sign Up
+        <router-link to="/" class="text-2xl font-extrabold text-black">
+          Reservelt
         </router-link>
       </div>
 
-      <button
-        class="md:hidden inline-flex items-center justify-center rounded-md p-2 text-black hover:text-gray-600 hover:bg-gray-100 transition duration-200"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
+      <div class="flex items-center gap-6">
+        <template v-if="!authStore.user">
+          <router-link
+            to="/login"
+            class="text-sm font-semibold text-gray-700 hover:text-gray-900"
+          >
+            Log In
+          </router-link>
+          <router-link
+            to="/signup"
+            class="text-sm font-semibold bg-black text-white px-5 py-2 rounded-md hover:bg-gray-800 transition duration-200"
+          >
+            Sign Up
+          </router-link>
+        </template>
+
+        <template v-else>
+          <router-link to="/profile">
+            <img
+              :src="avatarUrl"
+              alt="Avatar"
+              class="w-10 h-10 rounded-full border border-gray-300 hover:ring-2 ring-gray-300 transition"
+            />
+          </router-link>
+
+          <button
+            @click="logout"
+            class="text-sm font-semibold text-gray-700 hover:text-red-600 transition duration-200"
+          >
+            Log Out
+          </button>
+        </template>
+      </div>
     </div>
   </nav>
 </template>
 
-<script lang="ts">
-export default {
-  name: 'NavbarComponent',
-};
-</script>
+<style scoped>
+nav {
+  font-family: 'Inter', sans-serif;
+}
+</style>
