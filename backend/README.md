@@ -27,13 +27,13 @@ Module for database-related logic and configuration.
 
 ## Development Instructions
 
-1. `cd backend`  
-2. `python -m venv .venv`  
-3. Activate virtual environment:  
-    - Mac/Linux: `source .venv/bin/activate`  
-    - Windows: `.venv\scripts\activate.ps1`  
-4. Install required Python packages: `pip install -r requirements.txt`  
-5. Add `DATABASE_URL` to environment variables (in `.env` file)  
+1. `cd backend`
+2. `python -m venv .venv`
+3. Activate virtual environment:
+    - Mac/Linux: `source .venv/bin/activate`
+    - Windows: `.venv\scripts\activate.ps1`
+4. Install required Python packages: `pip install -r requirements.txt`
+5. Add `DATABASE_URL` to environment variables (in `.env` file)
 6. Start uvicorn server: `uvicorn main:API --reload --env-file .env`
 7. Don't forget XAMPP
 8. If you can't turn on SQL in XAMPP, open "Task manager" -> mysql -> end task -> start XAMPP

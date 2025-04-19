@@ -26,6 +26,7 @@
     "@rushstack/eslint-patch": "^1.8.0",
     "@vitejs/plugin-vue": "^5.0.5",
     "@vitejs/plugin-vue-jsx": "^4.1.1",
+    "@vue/compiler-sfc": "^3.5.13",
     "@vue/eslint-config-prettier": "^9.0.0",
     "autoprefixer": "^10.4.21",
     "eslint": "^8.57.0",
