@@ -2,11 +2,13 @@
 import { defineComponent, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
+import { useNotificationStore } from '@/stores/notificationStore'
 
 export default defineComponent({
   name: 'SignInComponent',
   setup() {
     const authStore = useAuthStore()
+    const notificationStore = useNotificationStore()
     const router = useRouter()
 
     const form = reactive({
@@ -17,10 +19,11 @@ export default defineComponent({
     const signin = async () => {
       try {
         await authStore.login(form)
-        console.log('Login successful')
+        notificationStore.show(`Welcome, ${authStore.user?.first_name || 'User'}!`, 'success')
         router.push('/')
       } catch (error) {
         console.error('Login failed:', error)
+        notificationStore.show('Login failed. Please try again.', 'error')
       }
     }
 

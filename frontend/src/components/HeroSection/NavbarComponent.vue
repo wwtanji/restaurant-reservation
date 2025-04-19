@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, computed, watch } from 'vue'
+import { defineComponent, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import { useNotificationStore } from '@/stores/notificationStore'
@@ -9,37 +9,27 @@ export default defineComponent({
   name: 'NavbarComponent',
   components: { NotificationToast },
   setup() {
-    const authStore = useAuthStore()
-    const notificationStore = useNotificationStore()
-    const router = useRouter()
+  const authStore = useAuthStore()
+  const notificationStore = useNotificationStore()
+  const router = useRouter()
 
-    const avatarUrl = computed(() =>
-      `https://api.dicebear.com/9.x/bottts/svg?seed=${authStore.user?.first_name || 'user'}`
-    )
+  const avatarUrl = computed(() =>
+    `https://api.dicebear.com/9.x/bottts/svg?seed=${authStore.user?.first_name || 'user'}`
+  )
 
-    const logout = () => {
-      authStore.logout()
-      notificationStore.show('You have successfully logged out', 'error')
-      router.push('/')
-    }
-
-    watch(
-      () => authStore.user,
-      (newVal, oldVal) => {
-        if (newVal && !oldVal) {
-          notificationStore.show(`Welcome, ${newVal.first_name}!`, 'success')
-        }
-      },
-      { immediate: true }
-    )
-
-    return {
-      authStore,
-      avatarUrl,
-      logout,
-      notificationStore
-    }
+  const logout = () => {
+    authStore.logout()
+    localStorage.removeItem('justLoggedIn')
+    notificationStore.show('You have successfully logged out', 'error')
+    router.push('/')
   }
+  return {
+    authStore,
+    avatarUrl,
+    logout,
+    notificationStore
+  }
+}
 })
 </script>
 
