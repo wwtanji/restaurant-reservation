@@ -3,39 +3,41 @@ import { defineComponent, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import { useNotificationStore } from '@/stores/notificationStore'
-import NotificationToast from '@/components/Notification/NotificationToast.vue'
+import NotificationComponent from '@/components/Notification/NotificationComponent.vue'
 
 export default defineComponent({
   name: 'NavbarComponent',
-  components: { NotificationToast },
+  components: { NotificationComponent },
   setup() {
-  const authStore = useAuthStore()
-  const notificationStore = useNotificationStore()
-  const router = useRouter()
+    const authStore = useAuthStore()
+    const notificationStore = useNotificationStore()
+    const router = useRouter()
 
-  const avatarUrl = computed(() =>
-    `https://api.dicebear.com/9.x/bottts/svg?seed=${authStore.user?.first_name || 'user'}`
-  )
+    const avatarUrl = computed(() =>
+      `https://api.dicebear.com/9.x/bottts/svg?seed=${authStore.user?.first_name || 'user'}`
+    )
 
-  const logout = () => {
-    authStore.logout()
-    localStorage.removeItem('justLoggedIn')
-    notificationStore.show('You have successfully logged out', 'error')
-    router.push('/')
+    const logout = () => {
+      authStore.logout()
+      localStorage.removeItem('justLoggedIn')
+      notificationStore.show('You have successfully logged out', 'error')
+      router.push('/')
+    }
+    return {
+      authStore,
+      avatarUrl,
+      logout,
+      notificationStore
+    }
   }
-  return {
-    authStore,
-    avatarUrl,
-    logout,
-    notificationStore
-  }
-}
 })
 </script>
 
+
+
 <template>
   <nav class="bg-white shadow-sm border-b border-gray-200 relative z-50">
-    <NotificationToast />
+    <NotificationComponent />
 
     <div class="flex items-center justify-between px-6 py-4 w-full">
       <div class="flex items-center gap-2">

@@ -12,26 +12,32 @@ export default {
         'Banskobystrický kraj',
         'Prešovský kraj',
         'Košický kraj'
-      ]
+      ],
+      regionRoutes: {
+        'Bratislavský kraj': 'bratislava',
+        'Trnavský kraj': 'trnava',
+        'Trenčiansky kraj': 'trencin',
+        'Nitriansky kraj': 'nitra',
+        'Žilinský kraj': 'zilina',
+        'Banskobystrický kraj': 'banskabystrica',
+        'Prešovský kraj': 'presov',
+        'Košický kraj': 'kosice'
+      }
     }
   },
   methods: {
     goToRegion(regionName) {
-      const slug = this.slugify(regionName)
-      this.$router.push(`/${slug}`)
-    },
-    slugify(name) {
-      return name
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/[^a-z0-9 ]/g, '')
-        .trim()
-        .replace(/\s+/g, '-')
+      const routeName = this.regionRoutes[regionName]
+      if (routeName) {
+        this.$router.push({ name: routeName })
+      } else {
+        console.warn(`No route defined for ${regionName}`)
+      }
     }
   }
 }
 </script>
+
 
 <template>
   <div class="min-h-screen bg-gradient-to-b from-blue-50 to-white">
