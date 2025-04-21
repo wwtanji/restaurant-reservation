@@ -49,6 +49,13 @@ export default defineComponent({
       <div class="flex items-center gap-6">
         <template v-if="!authStore.user">
           <router-link
+            to="/for-restaurants"
+            class="text-sm font-semibold text-gray-700 hover:text-gray-900"
+          >
+           For restaurants
+        </router-link>
+
+          <router-link
             to="/login"
             class="text-sm font-semibold text-gray-700 hover:text-gray-900"
           >

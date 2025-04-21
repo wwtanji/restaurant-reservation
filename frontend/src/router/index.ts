@@ -12,7 +12,7 @@ const router = createRouter({
     { path: '/', name: 'home', component: StartView },
     { path: '/signup', name: 'signup', component: RegisterView },
     { path: '/login', name: 'login', component: LoginView },
-    {path: '/bratislava', name: 'bratislava', component: import('@/views/regions/BratislavaView.vue')},
+    { path: '/bratislava', name: 'bratislava', component: () => import('@/views/regions/BratislavaView.vue') },
 
     { path: '/:pathMatch(.*)*', redirect: '/' }
   ]

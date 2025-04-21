@@ -1,21 +1,9 @@
-/* ==== Custom Тонкий Scrollbar ==== */
-
-/* Для WebKit-браузерів (Chrome, Safari, Edge) */
+/* Chrome, Safari, Edge */
 ::-webkit-scrollbar {
-    width: 4px;
+    display: none;
 }
 
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-}
-
-/* Для Firefox */
+/* Firefox */
 * {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+    scrollbar-width: none;
 }

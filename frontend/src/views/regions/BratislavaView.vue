@@ -1,21 +1,12 @@
-<template>
-  <div>
-    <NavbarComponent />
-
-
-  </div>
-</template>
-
-<script lang="ts">
-import NavbarComponent from '@/components/HeroSection/NavbarComponent.vue';
-
-export default {
-  name: 'BratislavaView',
-  components: {
-    NavbarComponent,
-  },
-};
+<script setup lang="ts">
+import NavbarComponent from '@/components/HeroSection/NavbarComponent.vue'
+import TopRatedComponent from '@/components/Bratislava/TopRatedComponent.vue';
 </script>
+
+<template>
+  <NavbarComponent />
+  <TopRatedComponent/>
+</template>
 
 <style scoped>
 h1 {
