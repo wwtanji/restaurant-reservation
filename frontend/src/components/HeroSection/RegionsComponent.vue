@@ -1,43 +1,39 @@
-<script lang="ts">
-export default {
-  name: 'LandingComponent',
-  data() {
-    return {
-      regions: [
-        'Bratislavský kraj',
-        'Trnavský kraj',
-        'Trenčiansky kraj',
-        'Nitriansky kraj',
-        'Žilinský kraj',
-        'Banskobystrický kraj',
-        'Prešovský kraj',
-        'Košický kraj'
-      ],
-      regionRoutes: {
-        'Bratislavský kraj': 'bratislava',
-        'Trnavský kraj': 'trnava',
-        'Trenčiansky kraj': 'trencin',
-        'Nitriansky kraj': 'nitra',
-        'Žilinský kraj': 'zilina',
-        'Banskobystrický kraj': 'banskabystrica',
-        'Prešovský kraj': 'presov',
-        'Košický kraj': 'kosice'
-      }
-    }
-  },
-  methods: {
-    goToRegion(regionName) {
-      const routeName = this.regionRoutes[regionName]
-      if (routeName) {
-        this.$router.push({ name: routeName })
-      } else {
-        console.warn(`No route defined for ${regionName}`)
-      }
-    }
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const regions = [
+  'Bratislavský kraj',
+  'Trnavský kraj',
+  'Trenčiansky kraj',
+  'Nitriansky kraj',
+  'Žilinský kraj',
+  'Banskobystrický kraj',
+  'Prešovský kraj',
+  'Košický kraj'
+]
+
+const regionRoutes = {
+  'Bratislavský kraj': 'bratislava',
+  'Trnavský kraj': 'trnava',
+  'Trenčiansky kraj': 'trencin',
+  'Nitriansky kraj': 'nitra',
+  'Žilinský kraj': 'zilina',
+  'Banskobystrický kraj': 'banskabystrica',
+  'Prešovský kraj': 'presov',
+  'Košický kraj': 'kosice'
+};
+
+function goToRegion(regionName) {
+  const routeName = regionRoutes[regionName]
+  if (routeName) {
+    router.push({ name: routeName })
+  } else {
+    console.warn(`No route defined for ${regionName}`)
   }
 }
 </script>
-
 
 <template>
   <div class="min-h-screen bg-gradient-to-b from-blue-50 to-white">
@@ -97,6 +93,6 @@ input {
 }
 
 .animate-fade-in {
-    animation: fadeIn 1s ease-in-out;
+  animation: fadeIn 1s ease-in-out;
 }
 </style>

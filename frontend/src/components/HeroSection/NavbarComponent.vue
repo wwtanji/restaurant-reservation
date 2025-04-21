@@ -1,39 +1,25 @@
-<script lang="ts">
-import { defineComponent, computed } from 'vue'
+<script setup lang="ts">
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import { useNotificationStore } from '@/stores/notificationStore'
 import NotificationComponent from '@/components/Notification/NotificationComponent.vue'
 
-export default defineComponent({
-  name: 'NavbarComponent',
-  components: { NotificationComponent },
-  setup() {
-    const authStore = useAuthStore()
-    const notificationStore = useNotificationStore()
-    const router = useRouter()
+const authStore = useAuthStore()
+const notificationStore = useNotificationStore()
+const router = useRouter()
 
-    const avatarUrl = computed(() =>
-      `https://api.dicebear.com/9.x/bottts/svg?seed=${authStore.user?.first_name || 'user'}`
-    )
+const avatarUrl = computed(() =>
+  `https://api.dicebear.com/9.x/bottts/svg?seed=${authStore.user?.first_name || 'user'}`
+)
 
-    const logout = () => {
-      authStore.logout()
-      localStorage.removeItem('justLoggedIn')
-      notificationStore.show('You have successfully logged out', 'error')
-      router.push('/')
-    }
-    return {
-      authStore,
-      avatarUrl,
-      logout,
-      notificationStore
-    }
-  }
-})
+const logout = () => {
+  authStore.logout()
+  localStorage.removeItem('justLoggedIn')
+  notificationStore.show('You have successfully logged out', 'error')
+  router.push('/')
+}
 </script>
-
-
 
 <template>
   <nav class="bg-white shadow-sm border-b border-gray-200 relative z-50">
@@ -52,8 +38,8 @@ export default defineComponent({
             to="/for-restaurants"
             class="text-sm font-semibold text-gray-700 hover:text-gray-900"
           >
-           For restaurants
-        </router-link>
+            For restaurants
+          </router-link>
 
           <router-link
             to="/login"
@@ -61,6 +47,7 @@ export default defineComponent({
           >
             Log In
           </router-link>
+
           <router-link
             to="/signup"
             class="text-sm font-semibold bg-black text-white px-5 py-2 rounded-md hover:bg-gray-800 transition duration-200"

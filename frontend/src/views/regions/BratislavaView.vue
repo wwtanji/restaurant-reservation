@@ -9,7 +9,4 @@ import TopRatedComponent from '@/components/Bratislava/TopRatedComponent.vue';
 </template>
 
 <style scoped>
-h1 {
-  color: #333;
-}
 </style>

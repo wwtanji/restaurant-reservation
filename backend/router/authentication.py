@@ -1,7 +1,6 @@
 import os
 import logging
-from datetime import datetime
-
+from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 from email_validator import validate_email, EmailNotValidError
 from fastapi import APIRouter, Depends, HTTPException
@@ -22,7 +21,6 @@ AUTH_ROUTER = APIRouter(prefix="/authentication")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="authentication/login")
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
@@ -79,21 +77,29 @@ def register(user: UserModel, db: Session = Depends(get_db)):
             raise HTTPException(status_code=400, detail="Email already registered")
 
         hashed_password = get_password_hash(user.user_password)
+
         new_user = User(
             first_name=user.first_name,
             last_name=user.last_name,
             user_email=user.user_email,
             user_password=hashed_password,
             role=user.role,
-            registered_at=datetime.now(),
+            registered_at=datetime.now(timezone.utc),
         )
+
         db.add(new_user)
         db.commit()
-        logger.info(f"User {user.user_email} registered successfully.")
+        db.refresh(new_user)
 
-        token = create_access_token(data={"sub": new_user.user_email}, expires_delta=ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+
+        token = create_access_token(
+            data={"sub": new_user.user_email}, expires_delta=access_token_expires
+        )
+
         logger.info(f"Access token created for user {user.user_email}.")
         return {"access_token": token, "token_type": "bearer"}
+
     except Exception as e:
         logger.error(f"Error registering user: {e}")
         raise HTTPException(status_code=400, detail="Error registering user") from e

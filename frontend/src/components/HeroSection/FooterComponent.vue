@@ -1,7 +1,4 @@
-<script lang="ts">
-export default {
-  name: 'FooterComponent',
-}
+<script setup lang="ts">
 </script>
 
 <template>

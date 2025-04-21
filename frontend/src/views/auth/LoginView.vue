@@ -1,38 +1,28 @@
-<script lang="ts">
-import { defineComponent, reactive } from 'vue'
+<script setup lang="ts">
+import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import { useNotificationStore } from '@/stores/notificationStore'
 
-export default defineComponent({
-  name: 'SignInComponent',
-  setup() {
-    const authStore = useAuthStore()
-    const notificationStore = useNotificationStore()
-    const router = useRouter()
+const authStore = useAuthStore()
+const notificationStore = useNotificationStore()
+const router = useRouter()
 
-    const form = reactive({
-      user_email: '',
-      user_password: ''
-    })
-
-    const signin = async () => {
-      try {
-        await authStore.login(form)
-        notificationStore.show(`Welcome, ${authStore.user?.first_name || 'User'}!`, 'success')
-        router.push('/')
-      } catch (error) {
-        console.error('Login failed:', error)
-        notificationStore.show('Login failed. Please try again.', 'error')
-      }
-    }
-
-    return {
-      form,
-      signin,
-    }
-  }
+const form = reactive({
+  user_email: '',
+  user_password: ''
 })
+
+const signin = async () => {
+  try {
+    await authStore.login(form)
+    notificationStore.show(`Welcome, ${authStore.user?.first_name || 'User'}!`, 'success')
+    router.push('/')
+  } catch (error) {
+    console.error('Login failed:', error)
+    notificationStore.show('Login failed. Please try again.', 'error')
+  }
+}
 </script>
 
 <template>
@@ -75,12 +65,10 @@ export default defineComponent({
   </div>
 </template>
 
-
-
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 
 * {
-    font-family: 'Inter', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 </style>
