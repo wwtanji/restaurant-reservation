@@ -1,5 +1,5 @@
 import fastapi as fa
-from router.authentication import AUTH_ROUTER
+from controllers.authentication_controller import AUTH_CONTROLLER
 
 ROOT_ROUTER = fa.APIRouter()
 
@@ -11,5 +11,5 @@ def test():
 
 ALL_CONTROLLERS = [
     ROOT_ROUTER,
-    AUTH_ROUTER
+    AUTH_CONTROLLER
 ]

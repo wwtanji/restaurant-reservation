@@ -1,6 +1,6 @@
 import fastapi as fa
 from fastapi.middleware.cors import CORSMiddleware
-from router import ALL_CONTROLLERS
+from controllers import ALL_CONTROLLERS
 
 API = fa.FastAPI(title="API", version="0.1.0", root_path="/api")
 

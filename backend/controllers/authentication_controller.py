@@ -17,7 +17,7 @@ from db.orm import User
 load_dotenv()
 
 logger = logging.getLogger(__name__)
-AUTH_ROUTER = APIRouter(prefix="/authentication")
+AUTH_CONTROLLER = APIRouter(prefix="/authentication")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="authentication/login")
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -66,7 +66,7 @@ def get_password_hash(password: str) -> str:
     return bcrypt_context.hash(password)
 
 
-@AUTH_ROUTER.post("/register")
+@AUTH_CONTROLLER.post("/register")
 def register(user: UserModel, db: Session = Depends(get_db)):
     try:
         existing_user = (
@@ -105,7 +105,7 @@ def register(user: UserModel, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Error registering user") from e
 
 
-@AUTH_ROUTER.post("/login")
+@AUTH_CONTROLLER.post("/login")
 def login(user: LoginModel, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.user_email == user.user_email).first()
 
@@ -123,7 +123,7 @@ def login(user: LoginModel, db: Session = Depends(get_db)):
     return {"access_token": token, "token_type": "bearer"}
 
 
-@AUTH_ROUTER.get("/me")
+@AUTH_CONTROLLER.get("/me")
 def get_me(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     payload = verify_access_token(token)
     user_email = payload.get("sub")
