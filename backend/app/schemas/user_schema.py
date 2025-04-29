@@ -1,21 +1,21 @@
 from pydantic import BaseModel, EmailStr, constr, field_validator, ConfigDict
-from typing import Optional
+from typing import Optional, Annotated
 from email_validator import validate_email, EmailNotValidError
 from fastapi import HTTPException
 
 
 class UserRegister(BaseModel):
     role: int = 0
-    first_name: constr(max_length=15)
-    last_name: constr(max_length=15)
+    first_name: Annotated[str, constr(max_length=15)]
+    last_name: Annotated[str, constr(max_length=15)]
     user_email: EmailStr
-    user_password: constr(min_length=8, max_length=80)
+    user_password: Annotated[str, constr(min_length=8, max_length=80)]
 
 
 
 class UserLogin(BaseModel):
     user_email: EmailStr
-    user_password: constr(min_length=8)
+    user_password: Annotated[str, constr(min_length=8)]
 
     @field_validator("user_email")
     @classmethod

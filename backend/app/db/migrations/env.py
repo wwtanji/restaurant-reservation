@@ -29,7 +29,6 @@ if config.config_file_name:
 
 from app.db.database import Base     # noqa: E402
 import app.models.user               # noqa: F401,E402
-import app.models.test              # noqa: F401,E402
 
 target_metadata = Base.metadata
 
