@@ -1,5 +1,5 @@
 import fastapi as fa
-from controllers.authentication_controller import AUTH_CONTROLLER
+from app.security.authentication import AUTH_CONTROLLER
 
 ROOT_ROUTER = fa.APIRouter()
 

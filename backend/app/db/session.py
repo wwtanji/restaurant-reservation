@@ -1,7 +1,6 @@
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from db.orm import Base
 
 
 class Database:

@@ -9,10 +9,9 @@ from passlib.context import CryptContext
 from pydantic import BaseModel, field_validator
 from sqlalchemy.orm import Session
 
-from utils.jwt_utils import create_access_token, verify_access_token
-from db import get_db
-from db.orm import User
-
+from app.security.jtw_utils import create_access_token, verify_access_token
+from app.db.session import get_db
+from app.models.user import User
 
 load_dotenv()
 
