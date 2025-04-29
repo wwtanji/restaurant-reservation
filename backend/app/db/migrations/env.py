@@ -21,7 +21,7 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 try:
-    from app.db.base import Base  # noqa: E402
+    from app.db import Base  # noqa: E402
 except ImportError:
     raise RuntimeError(
         "`orm.py` sa nenašlo – si v správnom priečinku (`cd backend/db`)?",
