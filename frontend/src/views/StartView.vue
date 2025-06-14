@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import NavbarComponent from '@/components/HeroSection/NavbarComponent.vue'
-import EightButtonsComponent from '@/components/HeroSection/RegionsComponent.vue'
-import JoinComponent from '@/components/HeroSection/JoinComponent.vue'
-import FooterComponent from '@/components/HeroSection/FooterComponent.vue'
+import NavbarComponent from '@/components/Main/NavbarComponent.vue'
+import EightButtonsComponent from '@/components/Main/RegionsComponent.vue'
+import JoinComponent from '@/components/Main/JoinComponent.vue'
+import FooterComponent from '@/components/Main/FooterComponent.vue'
 </script>
 
 <template>

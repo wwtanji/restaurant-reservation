@@ -3,13 +3,17 @@ import logging
 from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 from email_validator import validate_email, EmailNotValidError
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Body
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from pydantic import BaseModel, field_validator
 from sqlalchemy.orm import Session
 
-from utils.jwt_utils import create_access_token, verify_access_token
+from utils.jwt_utils import (
+    create_access_token,
+    create_refresh_token,
+    verify_access_token,
+)
 from db import get_db
 from db.orm import User
 
@@ -24,7 +28,7 @@ bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
 class UserModel(BaseModel):
@@ -97,8 +101,14 @@ def register(user: UserModel, db: Session = Depends(get_db)):
             data={"sub": new_user.user_email}, expires_delta=access_token_expires
         )
 
+        refresh_token = create_refresh_token(data={"sub": new_user.user_email})
+
         logger.info(f"Access token created for user {user.user_email}.")
-        return {"access_token": token, "token_type": "bearer"}
+        return {
+            "access_token": token,
+            "refresh_token": refresh_token,
+            "token_type": "bearer",
+        }
 
     except Exception as e:
         logger.error(f"Error registering user: {e}")
@@ -118,9 +128,15 @@ def login(user: LoginModel, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Invalid email or password")
 
     token = create_access_token(data={"sub": db_user.user_email})
+    refresh_token = create_refresh_token(data={"sub": db_user.user_email})
+
     logger.info(f"User '{user.user_email}' logged in successfully.")
 
-    return {"access_token": token, "token_type": "bearer"}
+    return {
+        "access_token": token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer",
+    }
 
 
 @AUTH_CONTROLLER.get("/me")
@@ -139,3 +155,28 @@ def get_me(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
         "user_email": user.user_email,
         "role": user.role,
     }
+
+
+@AUTH_CONTROLLER.post("/refresh")
+def refresh_token(refresh_token: str = Body(...), db: Session = Depends(get_db)):
+    try:
+        payload = verify_access_token(refresh_token)
+        user_email = payload.get("sub")
+
+        if user_email is None:
+            raise HTTPException(status_code=401, detail="Invalid refresh token")
+
+        user = db.query(User).filter(User.user_email == user_email).first()
+        if not user:
+            raise HTTPException(status_code=401, detail="User not found")
+
+        new_access_token = create_access_token(
+            data={"sub": user_email},
+            expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
+        )
+
+        return {"access_token": new_access_token, "token_type": "bearer"}
+
+    except Exception as e:
+        logger.error(f"Failed to refresh token: {e}")
+        raise HTTPException(status_code=401, detail="Could not refresh token")
