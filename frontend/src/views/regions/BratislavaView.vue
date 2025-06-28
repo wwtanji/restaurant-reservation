@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import NavbarComponent from '@/components/HeroSection/NavbarComponent.vue'
-import TopRatedComponent from '@/components/Bratislava/TopRatedComponent.vue';
+import TopRatedComponent from '@/components/Bratislava/TopRatedComponent.vue'
 </script>
 
 <template>
   <NavbarComponent />
-  <TopRatedComponent/>
+  <TopRatedComponent />
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -30,7 +30,9 @@ const signin = async () => {
   <div>
     <NavbarComponent />
     <div class="min-h-screen flex items-center justify-center bg-white p-6">
-      <div class="w-full max-w-md bg-white border border-gray-200 rounded-2xl shadow-xl p-8 sm:p-10">
+      <div
+        class="w-full max-w-md bg-white border border-gray-200 rounded-2xl shadow-xl p-8 sm:p-10"
+      >
         <div class="text-center mb-8">
           <h2 class="text-4xl font-extrabold text-gray-800">Sign In</h2>
           <p class="mt-2 text-gray-500">Welcome back! Please log in to your account.</p>
