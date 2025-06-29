@@ -29,7 +29,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="authentication/login")
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 20  # 30 seconds
+ACCESS_TOKEN_EXPIRE_MINUTES = 20  
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
