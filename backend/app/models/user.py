@@ -1,8 +1,8 @@
-from datetime import datetime, timezone
+from datetime import datetime
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
-from app.models.refresh_token import RefreshToken
+from typing import List
 
 
 class User(Base):
@@ -18,3 +18,6 @@ class User(Base):
     user_password: Mapped[str] = mapped_column(String(80), nullable=False)
     registered_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
     edited_at: Mapped[datetime] = mapped_column(onupdate=datetime.utcnow, nullable=True)
+    
+    # Relationship with refresh tokens
+    refresh_tokens: Mapped[List["RefreshToken"]] = relationship("RefreshToken", back_populates="user", cascade="all, delete-orphan")

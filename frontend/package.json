@@ -1,45 +1,49 @@
 {
-  "name": "restaurant-reservation-app",
-  "version": "0.0.0",
+  "name": "frontend",
+  "version": "0.1.0",
   "private": true,
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "format": "prettier --write src/"
-  },
   "dependencies": {
-    "@formkit/auto-animate": "^0.8.2",
-    "@heroicons/vue": "^2.2.0",
-    "axios": "^1.8.4",
-    "pinia": "^2.3.1",
-    "swiper": "^11.2.5",
-    "vue": "^3.4.29",
-    "vue-meta": "^2.4.0",
-    "vue-router": "^4.3.3",
-    "vue-slider-component": "^3.2.24",
-    "vue3-cookies": "^1.0.6"
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.126",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@types/react-router-dom": "^5.3.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.6.3",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.9.5",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "devDependencies": {
-    "@rushstack/eslint-patch": "^1.8.0",
-    "@typescript-eslint/eslint-plugin": "^8.31.0",
-    "@typescript-eslint/parser": "^8.31.0",
-    "@vitejs/plugin-vue": "^5.0.5",
-    "@vitejs/plugin-vue-jsx": "^4.1.1",
-    "@vue/compiler-sfc": "^3.5.13",
-    "@vue/eslint-config-prettier": "^9.0.0",
-    "@vue/tsconfig": "^0.7.0",
-    "autoprefixer": "^10.4.21",
-    "eslint": "^8.57.1",
-    "eslint-plugin-vue": "^9.33.0",
-    "postcss": "^8.5.3",
-    "prettier": "3.5.3",
-    "sass": "^1.77.6",
-    "tailwindcss": "^3.4.17",
-    "typescript": "^5.8.3",
-    "vite": "^6.2.5",
-    "vue-tsc": "^2.2.8"
+    "tailwindcss": "^3.4.17"
   }
 }

@@ -12,7 +12,6 @@ class UserRegister(BaseModel):
     user_password: Annotated[str, constr(min_length=8, max_length=80)]
 
 
-
 class UserLogin(BaseModel):
     user_email: EmailStr
     user_password: Annotated[str, constr(min_length=8)]
@@ -31,8 +30,7 @@ class UserLogin(BaseModel):
     def validate_password(cls, value: str) -> str:
         if len(value) < 8:
             raise HTTPException(
-                status_code=422,
-                detail="Password must be at least 8 characters long"
+                status_code=422, detail="Password must be at least 8 characters long"
             )
         return value
 
