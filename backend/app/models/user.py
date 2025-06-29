@@ -1,7 +1,8 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column
-from app.db.database import Base  
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from app.db.database import Base
+from app.models.refresh_token import RefreshToken
 
 
 class User(Base):

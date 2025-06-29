@@ -1,5 +1,4 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <footer class="bg-[#1F2530] text-white py-16 px-6 md:px-12 font-sans">
@@ -10,8 +9,14 @@
           <li><a href="#" class="hover:underline">Imprint</a></li>
           <li class="flex items-center gap-1">
             <a href="#" class="hover:underline">Privacy Policy</a>
-            <svg class="w-4 h-4 mt-[1px]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg
+              class="w-4 h-4 mt-[1px]"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </li>
           <li><a href="#" class="hover:underline">Terms & Conditions</a></li>
@@ -26,5 +31,4 @@
   </footer>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
