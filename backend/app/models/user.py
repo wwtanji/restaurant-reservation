@@ -1,8 +1,12 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
-from typing import List
+from app.models.refresh_token import RefreshToken
+
+
+def get_utc_now():
+    return datetime.now(timezone.utc)
 
 
 class User(Base):
@@ -16,8 +20,10 @@ class User(Base):
         String(40), nullable=False, unique=True, index=True
     )
     user_password: Mapped[str] = mapped_column(String(80), nullable=False)
-    registered_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
-    edited_at: Mapped[datetime] = mapped_column(onupdate=datetime.utcnow, nullable=True)
-    
+    registered_at: Mapped[datetime] = mapped_column(default=get_utc_now)
+    edited_at: Mapped[datetime] = mapped_column(onupdate=get_utc_now, nullable=True)
+
     # Relationship with refresh tokens
-    refresh_tokens: Mapped[List["RefreshToken"]] = relationship("RefreshToken", back_populates="user", cascade="all, delete-orphan")
+    refresh_tokens: Mapped[list["RefreshToken"]] = relationship(
+        "RefreshToken", back_populates="user", cascade="all, delete-orphan"
+    )

@@ -12,8 +12,7 @@ from app.utils.jwt_utils import (
     create_refresh_token,
     verify_token,
     verify_and_get_refresh_token,
-    revoke_refresh_token,
-    ACCESS_TOKEN_EXPIRE_MINUTES
+    revoke_refresh_token
 )
 from app.db import get_db
 from app.models.user import User
@@ -29,7 +28,6 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="authentication/login")
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 20  
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:

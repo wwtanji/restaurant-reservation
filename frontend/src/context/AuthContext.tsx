@@ -29,6 +29,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const fetchUserProfile = async (token: string): Promise<User | null> => {
+    const response = await fetch(`${API_URL}/authentication/me`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      mode: 'cors',
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch user profile');
+    }
+
+    return response.json();
+  };
+
   useEffect(() => {
     const initializeAuth = async () => {
       const token = localStorage.getItem('token');
@@ -41,52 +56,42 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       try {
         // Try to get user profile with stored token
-        const response = await fetch(`${API_URL}/authentication/me`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        if (response.ok) {
-          const userData = await response.json();
+        const userData = await fetchUserProfile(token);
+        if (userData) {
           setUser(userData);
-        } else if (response.status === 401 && refreshToken) {
-          // Token expired, try to refresh
-          const refreshResponse = await fetch(`${API_URL}/authentication/refresh`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ refresh_token: refreshToken }),
-          });
-
-          if (refreshResponse.ok) {
-            const { access_token, refresh_token } = await refreshResponse.json();
-            localStorage.setItem('token', access_token);
-            localStorage.setItem('refresh_token', refresh_token);
-
-            // Try again with new token
-            const newResponse = await fetch(`${API_URL}/authentication/me`, {
-              headers: {
-                'Authorization': `Bearer ${access_token}`,
-              },
-            });
-
-            if (newResponse.ok) {
-              const userData = await newResponse.json();
-              setUser(userData);
-            } else {
-              throw new Error('Failed to get user data with refreshed token');
-            }
-          } else {
-            throw new Error('Failed to refresh token');
-          }
         }
       } catch (error) {
-        console.error('Auth initialization error:', error);
-        // Clear invalid tokens
-        localStorage.removeItem('token');
-        localStorage.removeItem('refresh_token');
+        if (refreshToken) {
+          try {
+            // Token expired, try to refresh
+            const refreshResponse = await fetch(`${API_URL}/authentication/refresh`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ refresh_token: refreshToken }),
+              mode: 'cors',
+            });
+
+            if (refreshResponse.ok) {
+              const { access_token, refresh_token } = await refreshResponse.json();
+              localStorage.setItem('token', access_token);
+              localStorage.setItem('refresh_token', refresh_token);
+
+              // Try again with new token
+              const userData = await fetchUserProfile(access_token);
+              if (userData) {
+                setUser(userData);
+              }
+            } else {
+              throw new Error('Failed to refresh token');
+            }
+          } catch (refreshError) {
+            console.error('Failed to refresh token:', refreshError);
+            localStorage.removeItem('token');
+            localStorage.removeItem('refresh_token');
+          }
+        }
       } finally {
         setIsLoading(false);
       }

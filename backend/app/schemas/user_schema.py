@@ -2,14 +2,31 @@ from pydantic import BaseModel, EmailStr, constr, field_validator, ConfigDict
 from typing import Optional, Annotated
 from email_validator import validate_email, EmailNotValidError
 from fastapi import HTTPException
+from enum import IntEnum
+
+
+class UserRole(IntEnum):
+    CUSTOMER = 0
+    ADMIN = 1
 
 
 class UserRegister(BaseModel):
-    role: int = 0
+    role: UserRole = UserRole.CUSTOMER
     first_name: Annotated[str, constr(max_length=15)]
     last_name: Annotated[str, constr(max_length=15)]
     user_email: EmailStr
     user_password: Annotated[str, constr(min_length=8, max_length=80)]
+
+    @field_validator("role")
+    @classmethod
+    def validate_role(cls, value: int) -> int:
+        try:
+            return UserRole(value)
+        except ValueError:
+            raise HTTPException(
+                status_code=422,
+                detail=f"Invalid role. Must be one of: {[role.value for role in UserRole]}",
+            )
 
 
 class UserLogin(BaseModel):
@@ -49,6 +66,6 @@ class UserProfile(BaseModel):
     first_name: str
     last_name: str
     user_email: EmailStr
-    role: int
+    role: UserRole
 
     model_config = ConfigDict(from_attributes=True)

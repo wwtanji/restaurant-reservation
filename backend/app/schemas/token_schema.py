@@ -10,5 +10,6 @@ class TokenRefreshRequest(BaseModel):
     refresh_token: str
 
 class TokenPayload(BaseModel):
-    sub: str  # user_email
+    sub: str  # user_id
+    email: str | None = None
     exp: datetime | None = None 
