@@ -137,7 +137,9 @@ export const useAuthActions = () => {
       // Update auth context
       setUser(userData);
       
-      show('Welcome back!', 'success');
+      // Set login flag for enhanced notification
+      localStorage.setItem('justLoggedIn', 'true');
+      show(`Welcome back, ${userData.first_name}! You're now logged into Reservelt.`, 'success');
       navigate('/');
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Invalid email or password';
