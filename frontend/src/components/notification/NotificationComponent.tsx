@@ -15,4 +15,4 @@ const NotificationComponent: React.FC = () => {
   );
 };
 
-export default NotificationComponent; 
+export default NotificationComponent;

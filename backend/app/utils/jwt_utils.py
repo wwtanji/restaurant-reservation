@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 from sqlalchemy.orm import Session
 from app.models.refresh_token import RefreshToken, TokenStatus
-import logging 
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -16,31 +16,37 @@ if not SECRET_KEY:
     raise RuntimeError("SECRET_KEY not found in environment variables.")
 
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 15 
-REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24    
+ACCESS_TOKEN_EXPIRE_MINUTES = 15
+REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24
 
 
 def cleanup_old_tokens(user_id: int, db: Session) -> None:
+    """
+    Clean up expired and revoked tokens for a user.
+    This version ensures only ONE active token per user (single-device mode).
+    """
     try:
         now = datetime.now(timezone.utc)
-        
+
+        # Mark expired tokens as EXPIRED (only if they're still ACTIVE)
         db.query(RefreshToken).filter(
             RefreshToken.user_id == user_id,
             RefreshToken.expires_at < now,
             RefreshToken.status == TokenStatus.ACTIVE,
         ).update({"status": TokenStatus.EXPIRED})
 
-        # Revoke all active tokens for this user (keep only the new one)
+        # REVOKE all other active tokens for this user (single-device mode)
         db.query(RefreshToken).filter(
             RefreshToken.user_id == user_id,
             RefreshToken.status == TokenStatus.ACTIVE,
         ).update({"status": TokenStatus.REVOKED})
 
-        # Delete old tokens (expired or revoked)
+        # Delete old tokens that are either expired or revoked and older than 7 days
+        cutoff_date = now - timedelta(days=7)
         db.query(RefreshToken).filter(
             RefreshToken.user_id == user_id,
-            (RefreshToken.status != TokenStatus.ACTIVE)
-            | (RefreshToken.expires_at < now),
+            RefreshToken.status.in_([TokenStatus.EXPIRED, TokenStatus.REVOKED]),
+            RefreshToken.created_at < cutoff_date,
         ).delete(synchronize_session=False)
 
         db.commit()
@@ -138,3 +144,27 @@ def revoke_refresh_token(token: str, db: Session) -> None:
     except Exception as e:
         logger.error(f"Error revoking refresh token: {str(e)}")
         db.rollback()
+
+
+def revoke_all_user_tokens(user_id: int, db: Session) -> int:
+    """
+    Revoke all active refresh tokens for a specific user.
+    "logout from all devices" functionality
+    """
+    try:
+        updated_count = (
+            db.query(RefreshToken)
+            .filter(
+                RefreshToken.user_id == user_id,
+                RefreshToken.status == TokenStatus.ACTIVE,
+            )
+            .update({"status": TokenStatus.REVOKED})
+        )
+
+        db.commit()
+        logger.info(f"Revoked {updated_count} active tokens for user {user_id}")
+        return updated_count
+    except Exception as e:
+        logger.error(f"Error revoking all tokens for user {user_id}: {str(e)}")
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Error revoking tokens")

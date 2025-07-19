@@ -1,6 +1,6 @@
 import os
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
@@ -12,12 +12,13 @@ from app.utils.jwt_utils import (
     create_refresh_token,
     verify_token,
     verify_and_get_refresh_token,
-    revoke_refresh_token
+    revoke_refresh_token,
+    revoke_all_user_tokens
 )
 from app.db import get_db
 from app.models.user import User
 from app.schemas.user_schema import UserRegister, UserLogin, UserProfile
-from app.schemas.token_schema import TokenResponse, TokenRefreshRequest
+from app.schemas.token_schema import TokenResponse, TokenRefreshRequest, LogoutResponse
 
 load_dotenv()
 
@@ -81,16 +82,57 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
 
 @AUTH_CONTROLLER.post("/refresh", response_model=TokenResponse)
 def refresh_token(refresh_request: TokenRefreshRequest, db: Session = Depends(get_db)):
-    db_token = verify_and_get_refresh_token(refresh_request.refresh_token, db)
-    user = db_token.user
+    try:
+        # Start transaction to prevent race conditions
+        db_token = verify_and_get_refresh_token(refresh_request.refresh_token, db)
+        user = db_token.user
 
-    revoke_refresh_token(refresh_request.refresh_token, db)
+        # Revoke the used token first
+        revoke_refresh_token(refresh_request.refresh_token, db)
 
-    access_token = create_access_token(data={"sub": user.user_email})
-    new_refresh_token = create_refresh_token(user_id=user.id, db=db)
+        # Create new tokens
+        access_token = create_access_token(data={"sub": user.user_email})
+        new_refresh_token = create_refresh_token(user_id=user.id, db=db)
 
-    logger.info(f"Tokens refreshed for user '{user.user_email}'.")
-    return {"access_token": access_token, "refresh_token": new_refresh_token, "token_type": "bearer"}
+        logger.info(f"Tokens refreshed for user '{user.user_email}'.")
+        return {"access_token": access_token, "refresh_token": new_refresh_token, "token_type": "bearer"}
+    
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Error during token refresh: {str(e)}")
+        raise
+
+
+@AUTH_CONTROLLER.post("/logout", response_model=LogoutResponse)
+def logout(refresh_request: TokenRefreshRequest, db: Session = Depends(get_db)):
+    """
+    Logout endpoint that revokes the provided refresh token
+    """
+    try:
+        revoke_refresh_token(refresh_request.refresh_token, db)
+        logger.info("User logged out successfully")
+    except Exception as e:
+        logger.warning(f"Logout attempt with potentially invalid token: {str(e)}")
+    
+    return {"message": "Successfully logged out"}
+
+
+@AUTH_CONTROLLER.post("/logout-all", response_model=LogoutResponse)
+def logout_all(refresh_request: TokenRefreshRequest, db: Session = Depends(get_db)):
+    """
+    Logout endpoint that revokes all refresh tokens for the user
+    Always returns success, even if tokens are already invalid
+    """
+    try:
+        db_token = verify_and_get_refresh_token(refresh_request.refresh_token, db)
+        user_id = db_token.user_id
+        
+        revoked_count = revoke_all_user_tokens(user_id, db)
+        logger.info(f"User {user_id} logged out from all devices successfully, revoked {revoked_count} tokens")
+    except Exception as e:
+        logger.warning(f"Logout all attempt with potentially invalid token: {str(e)}")
+    
+    return {"message": "Successfully logged out from all devices"}
 
 
 @AUTH_CONTROLLER.get("/me", response_model=UserProfile)

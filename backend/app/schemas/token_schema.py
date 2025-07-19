@@ -13,3 +13,6 @@ class TokenPayload(BaseModel):
     sub: str  # user_id
     email: str | None = None
     exp: datetime | None = None 
+
+class LogoutResponse(BaseModel):
+    message: str 
